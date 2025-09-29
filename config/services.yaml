@@ -1,0 +1,51 @@
+# Example AI Services Configuration
+
+services:
+  # Local LLaMA using Ollama
+  - name: ollama-llama2
+    command: ollama run llama2
+    port: 11434
+    health_check_url: http://localhost:11434/api/tags
+    env_vars:
+      OLLAMA_HOST: 0.0.0.0
+    auto_start: false
+    restart_on_failure: true
+
+  # Text Generation WebUI
+  - name: text-generation-webui
+    command: python server.py --model-dir ./models --api
+    port: 5000
+    health_check_url: http://localhost:5000/api/v1/model
+    env_vars:
+      CUDA_VISIBLE_DEVICES: "0"
+    auto_start: false
+    restart_on_failure: true
+
+  # Local Whisper for speech recognition
+  - name: whisper-api
+    command: python -m whisper.api --port 9000
+    port: 9000
+    health_check_url: http://localhost:9000/health
+    env_vars: {}
+    auto_start: false
+    restart_on_failure: true
+
+  # Code analysis service
+  - name: code-analyzer
+    command: python -m pylsp --tcp --port 2087
+    port: 2087
+    health_check_url: null
+    env_vars: {}
+    auto_start: true
+    restart_on_failure: true
+
+  # Custom AI service
+  - name: custom-ai-service
+    command: ./scripts/start_custom_ai.sh
+    port: 8080
+    health_check_url: http://localhost:8080/health
+    env_vars:
+      MODEL_PATH: ./models/custom_model
+      API_KEY: your_custom_api_key
+    auto_start: false
+    restart_on_failure: true

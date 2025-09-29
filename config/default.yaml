@@ -1,0 +1,78 @@
+# Default RelayShell Configuration
+
+debug: false
+log_level: INFO
+data_dir: ~/.relayshell
+
+# LLM Backend Configurations
+llm_configs:
+  - name: gpt-4
+    provider: openai
+    model: gpt-4
+    api_key: null  # Set your OpenAI API key here
+    priority: 1
+    enabled: true
+    timeout: 30
+    max_tokens: 2048
+
+  - name: claude
+    provider: anthropic
+    model: claude-3-sonnet-20240229
+    api_key: null  # Set your Anthropic API key here
+    priority: 2
+    enabled: true
+    timeout: 30
+    max_tokens: 2048
+
+  - name: gemini
+    provider: google
+    model: gemini-pro
+    api_key: null  # Set your Google API key here
+    priority: 3
+    enabled: true
+    timeout: 30
+    max_tokens: 2048
+
+# Speech Recognition and Synthesis
+speech_config:
+  recognition_engine: google
+  synthesis_engine: pyttsx3
+  languages:
+    - en-US
+    - ta-IN
+  default_language: en-US
+  speech_rate: 200
+  speech_volume: 0.9
+  recognition_timeout: 5
+  phrase_timeout: 1.0
+
+# Monitoring Configuration
+monitoring_config:
+  clipboard_enabled: true
+  terminal_enabled: true
+  clipboard_poll_interval: 0.5
+  terminal_keywords:
+    - error
+    - exception
+    - failed
+    - traceback
+    - syntax error
+  auto_trigger_keywords:
+    - fix this
+    - help with
+    - debug this
+
+# AI Services Management
+services:
+  - name: local-llama
+    command: ollama serve
+    port: 11434
+    health_check_url: http://localhost:11434/api/tags
+    env_vars: {}
+    auto_start: false
+    restart_on_failure: true
+
+# Editor and Testing Configuration
+editor_command: code
+test_command: pytest
+test_timeout: 60
